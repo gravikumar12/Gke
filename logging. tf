@@ -1,0 +1,21 @@
+provider "google" {
+  project = "your-project-id"
+  region  = "your-region"
+}
+
+# Create a log sink
+resource "google_logging_project_sink" "example_sink" {
+  name        = "example-sink"
+  destination = "storage.googleapis.com/${google_storage_bucket.example_bucket.name}"
+  filter      = "resource.type = gce_instance"
+}
+
+# Create a storage bucket for log sink destination
+resource "google_storage_bucket" "example_bucket" {
+  name                        = "example-log-bucket"
+  location                    = "US"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+}
+
+# Update the log sink destination bucket
